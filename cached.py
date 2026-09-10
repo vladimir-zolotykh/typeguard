@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from collections import defaultdict
+import pytest
 
 
 class CachedMeta(type):
@@ -32,8 +33,10 @@ class Person(metaclass=CachedMeta):
 
 def test_person():
     bob = Person("Bob", 37, 12000.0)
-    print(bob)
-    # assert str(bob) == "Person('Bob', 37, 12000.0)"
+    assert str(bob) == "Person(name=Bob, age=37, salary=12000.0)"
+    assert Person("Bob", 37, 12000.0) is bob
+    with pytest.raises(AssertionError):
+        assert Person("Bob", 38, 12000.0) is bob
 
 
 if __name__ == "__main__":
