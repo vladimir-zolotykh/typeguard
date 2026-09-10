@@ -52,6 +52,4 @@ def test_symbol():
 
 
 if __name__ == "__main__":
-    import sys
-
-    pytest.main(sys.argv)
+    pytest.main([__file__])
