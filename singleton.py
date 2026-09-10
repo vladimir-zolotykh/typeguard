@@ -10,13 +10,19 @@ class Singleton(type):
 
     def __call__(cls, *args, **kwargs):
         instances = type(cls)._instances
-        name = args[0]
+        # name = args[0]
+        name = cls.key(*args, **kwargs)
         if name not in instances[cls]:
             instances[cls][name] = super().__call__(*args, **kwargs)
         return instances[cls][name]
 
 
 class Symbol(metaclass=Singleton):
+    @classmethod
+    def key(*args, **kwargs) -> str:
+        print(f"{args = }, {kwargs = }")
+        return args[0]
+
     def __init__(self, name: str, pat: str = ""):
         print(f"Initializing Symbol({name}, {pat})")
         self.name = name
@@ -24,6 +30,10 @@ class Symbol(metaclass=Singleton):
 
 
 class Logger(metaclass=Singleton):
+    @classmethod
+    def key(*args, **kwargs) -> str:
+        return args[0]
+
     def __init__(self, name: str):
         print(f"Initializing Logger({name})")
         self.name = name
