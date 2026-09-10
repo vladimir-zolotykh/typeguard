@@ -3,6 +3,7 @@
 # PYTHON_ARGCOMPLETE_OK
 from functools import wraps
 from inspect import signature, _empty
+import pytest
 
 
 def autoassert(func):
@@ -37,8 +38,17 @@ class Person:
 
 def test_person():
     bob = Person("Bob", 37, 12000.0)
-    print(bob)
+    assert str(bob) == "Person(name=Bob, age=37, salary=12000.0)"
+    with pytest.raises(
+        AssertionError, match="'age': type mismatch, expected <class 'int'>"
+    ):
+        bob = Person("Bob", 37.2, "a lot")
+    with pytest.raises(
+        AssertionError, match="'salary': type mismatch, expected <class 'float'>"
+    ):
+        bob = Person("Bob", 37, "a lot")
 
 
 if __name__ == "__main__":
-    test_person()
+    # test_person()
+    pytest.main([__file__])
