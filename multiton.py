@@ -5,7 +5,7 @@ from collections import defaultdict
 import pytest
 
 
-class Singleton(type):
+class Multiton(type):
     _instances = defaultdict(dict)
 
     def __call__(cls, *args, **kwargs):
@@ -17,7 +17,7 @@ class Singleton(type):
         return instances[cls][name]
 
 
-class Symbol(metaclass=Singleton):
+class Symbol(metaclass=Multiton):
     @classmethod
     def key(*args, **kwargs) -> str:
         print(f"{args = }, {kwargs = }")
@@ -29,7 +29,7 @@ class Symbol(metaclass=Singleton):
         self.pat = pat
 
 
-class Logger(metaclass=Singleton):
+class Logger(metaclass=Multiton):
     @classmethod
     def key(*args, **kwargs) -> str:
         return args[0]
