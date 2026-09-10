@@ -11,7 +11,7 @@ class Singleton(type):
     def __call__(cls, *args, **kwargs):
         instances = type(cls)._instances
         name = args[0]
-        if cls not in instances or name not in instances[cls]:
+        if name not in instances[cls]:
             instances[cls][name] = super().__call__(*args, **kwargs)
         return instances[cls][name]
 
