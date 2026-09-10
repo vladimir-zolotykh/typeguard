@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from collections import defaultdict
+import pytest
 
 
 class Singleton(type):
@@ -28,7 +29,7 @@ class Logger(metaclass=Singleton):
         self.name = name
 
 
-if __name__ == "__main__":
+def test_symbol():
     num = Symbol("NUM", r"\d+")
     num2 = Symbol("NUM")
     assert num is num2
@@ -38,3 +39,9 @@ if __name__ == "__main__":
     g1 = Logger("sys")
     g2 = Logger("sys")
     assert g1 is g2
+
+
+if __name__ == "__main__":
+    import sys
+
+    pytest.main(sys.argv)
