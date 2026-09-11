@@ -1,0 +1,102 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# PYTHON_ARGCOMPLETE_OK
+from typing import Callable
+import types
+import pytest
+
+
+def fib(n):
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 1
+    else:
+        return fib(n - 2) + fib(n - 1)
+
+
+@pytest.mark.parametrize(
+    "n, res",
+    [
+        (0, 0),
+        (1, 1),
+        (2, 1),
+        (3, 2),
+        (4, 3),
+        (5, 5),
+        (6, 8),
+        (7, 13),
+        (8, 21),
+        (9, 34),
+    ],
+)
+def test_fib(n, res):
+    assert fib(n) == res
+
+
+def ackermann(m, n):
+    if m == 0:
+        return n + 1
+    elif m > 0 and n == 0:
+        return ackermann(m - 1, 1)
+    else:
+        return ackermann(m - 1, ackermann(m, n - 1))
+
+
+@pytest.mark.parametrize(
+    "m, n, res",
+    [
+        (0, 0),
+        (1, 1),
+        (2, 1),
+        (3, 2),
+        (4, 3),
+        (5, 5),
+        (6, 8),
+        (7, 13),
+        (8, 21),
+        (9, 34),
+    ],
+)
+def test_ackermann(m, n, res):
+    assert fib(n) == res
+
+
+class lazyproperty:
+    def __init__(self, func: Callable[[int], int]):
+        self.func = func
+
+    def __get__(self, instance, owner=None):
+        if instance is None:
+            return self
+        self.cached = self.func.__name__
+        if not hasattr(instance, self.cached):
+            setattr(instance, self.cached, {})
+        return types.MethodType(self, instance)
+
+    def __call__(self, *args, **kwargs):
+        # n = args[0]
+        key = tuple(args)
+        if key not in self.cached:
+            self.cached[key] = self.func(*args, **kwargs)
+        return self.cached[key]
+
+
+class Box:
+    @lazyproperty
+    def fib(self, n: int) -> int:
+        return fib(n)
+
+    @lazyproperty
+    def ackermann(self, m, n):
+        return ackermann(m, n)
+
+
+def test_lazyproperty():
+    box = Box()
+    print(box.fib(10))
+    print(box.ackermann(3, 2))
+
+
+if __name__ == "__main__":
+    test_lazyproperty()
