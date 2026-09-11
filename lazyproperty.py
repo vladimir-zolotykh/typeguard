@@ -44,22 +44,26 @@ def ackermann(m, n):
 
 
 @pytest.mark.parametrize(
-    "m, n, res",
+    ("m", "n", "expected"),
     [
-        (0, 0),
-        (1, 1),
-        (2, 1),
-        (3, 2),
-        (4, 3),
-        (5, 5),
-        (6, 8),
-        (7, 13),
-        (8, 21),
-        (9, 34),
+        (0, 0, 1),
+        (0, 1, 2),
+        (0, 5, 6),
+        (1, 0, 2),
+        (1, 1, 3),
+        (1, 5, 7),
+        (2, 0, 3),
+        (2, 1, 5),
+        (2, 5, 13),
+        (3, 0, 5),
+        (3, 1, 13),
+        (3, 2, 29),
+        (3, 3, 61),
+        (3, 4, 125),
     ],
 )
-def test_ackermann(m, n, res):
-    assert fib(n) == res
+def test_ackermann(m: int, n: int, expected: int) -> None:
+    assert ackermann(m, n) == expected
 
 
 class lazyproperty:
