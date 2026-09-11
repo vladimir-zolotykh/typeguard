@@ -69,17 +69,17 @@ def test_ackermann(m: int, n: int, expected: int) -> None:
 class lazyproperty:
     def __init__(self, func: Callable[[int], int]):
         self.func = func
+        self.cached = {}
 
     def __get__(self, instance, owner=None):
         if instance is None:
             return self
-        self.cached = self.func.__name__
-        if not hasattr(instance, self.cached):
-            setattr(instance, self.cached, {})
+        cached_name = f"cached_{self.func.__name__}"
+        if not hasattr(instance, cached_name):
+            setattr(instance, cached_name, self.cached)
         return types.MethodType(self, instance)
 
     def __call__(self, *args, **kwargs):
-        # n = args[0]
         key = tuple(args)
         if key not in self.cached:
             self.cached[key] = self.func(*args, **kwargs)
@@ -99,7 +99,7 @@ class Box:
 def test_lazyproperty():
     box = Box()
     print(box.fib(10))
-    print(box.ackermann(3, 2))
+    print(box.ackermann(1, 5))
 
 
 if __name__ == "__main__":
