@@ -3,6 +3,8 @@
 # PYTHON_ARGCOMPLETE_OK
 from typing import Callable
 import types
+from contextlib import contextmanager
+from time import perf_counter
 import pytest
 
 
@@ -96,9 +98,20 @@ class Box:
         return ackermann(m, n)
 
 
+@contextmanager
+def time_counter(label="Fibonacci"):
+    start = perf_counter()
+    try:
+        yield start
+    finally:
+        elapsed = perf_counter() - start
+        print(f"{label} elapsed: {elapsed:.4f}")
+
+
 def test_lazyproperty():
     box = Box()
-    print(box.fib(10))
+    with time_counter("Fibonacci"):
+        print(box.fib(40))
     print(box.ackermann(1, 5))
 
 
